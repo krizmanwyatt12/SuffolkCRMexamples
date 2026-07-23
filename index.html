@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom CRM on Airtable — Build Patterns · Suffolk Construction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2; --paper: #FFFCF6; --cream2: #F2EDE4;
+    --navy: #0B1F3A; --orange: #E8734A; --gray: #6B7280;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--navy); font-family: 'Inter', sans-serif; line-height: 1.68; padding: 0 6%; }
+  .container { max-width: 920px; margin: 0 auto; padding: 48px 0 72px; }
+  .masthead { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px solid var(--navy); padding-bottom: 14px; margin-bottom: 40px; }
+  .masthead .brand { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; }
+  .masthead .meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--gray); }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 560; font-size: clamp(2rem, 4.4vw, 3rem); line-height: 1.12; margin-bottom: 18px; }
+  h1 em { font-style: italic; color: var(--orange); }
+  .deck { font-family: 'Fraunces', serif; font-style: italic; font-size: 1.16rem; color: #3c4b61; max-width: 44em; margin-bottom: 46px; }
+  h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.42rem; margin: 54px 0 16px; }
+  h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.12rem; margin: 26px 0 8px; }
+  p { max-width: 46em; margin-bottom: 14px; font-size: 0.98rem; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0 10px; background: var(--paper); font-size: 0.9rem; }
+  th { background: var(--navy); color: var(--cream); font-weight: 600; font-size: 0.8rem; text-align: left; padding: 11px 14px; }
+  td { padding: 12px 14px; border-bottom: 1px solid #E9E3D8; vertical-align: top; }
+  td.layer { font-family: 'Fraunces', serif; font-weight: 600; white-space: nowrap; }
+  td.mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #3c4b61; }
+  .pattern { background: var(--paper); border: 1px solid #E5DFD3; border-left: 4px solid var(--navy); padding: 26px 30px; margin: 22px 0; }
+  .pattern .num { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); display: block; margin-bottom: 6px; }
+  .pattern h3 { margin-top: 0; }
+  .pattern p { font-size: 0.94rem; }
+  .pattern .build { font-size: 0.85rem; color: #3c4b61; border-top: 1px dashed #DDD5C7; margin-top: 14px; padding-top: 12px; }
+  .pattern .build strong { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); font-weight: 500; }
+  .pattern.deployed { border-left-color: var(--orange); }
+  .pattern .who { font-family: 'Fraunces', serif; font-style: italic; font-size: 1rem; color: #3c4b61; margin-bottom: 10px; }
+  .pattern .integ { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--gray); margin-top: 12px; }
+  .stories { list-style: none; margin: 18px 0 8px; max-width: 48em; }
+  .stories li { background: var(--paper); border: 1px solid #E5DFD3; padding: 16px 20px; margin-bottom: 10px; font-size: 0.94rem; }
+  .stories a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--orange); }
+  .stories a:hover { color: var(--orange); }
+  .stories .desc { color: #3c4b61; }
+  .quiet { background: var(--cream2); padding: 22px 26px; margin: 30px 0; max-width: 52em; }
+  .quiet p { font-size: 0.93rem; margin-bottom: 6px; }
+  .quiet .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); display: block; margin-bottom: 8px; }
+  .footnote { font-size: 0.85rem; color: var(--gray); max-width: 50em; }
+  footer { margin-top: 64px; border-top: 1px solid #DDD5C7; padding-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--gray); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="masthead">
+    <span class="brand">Airtable × Suffolk Construction</span>
+    <span class="meta">JULY 2026 · BUILD REFERENCE</span>
+  </div>
+
+  <div class="kicker">Custom CRM on Airtable</div>
+  <h1>How CRM systems get <em>built</em>, not bought</h1>
+  <p class="deck">What you asked for after the July 22 call: how companies stand up CRM on Airtable — the recurring patterns, which parts of the product carry each layer, and what the work actually involves. Three production builds are profiled below with names withheld; the full detail gets walked through live in the solutions session.</p>
+
+  <h2>The anatomy — five layers</h2>
+  <p>Every durable CRM build on Airtable separates into the same five layers. The reason this matters for Suffolk: your last two implementations failed at the top layer (adoption) because the bottom layer (data model) was fixed by the vendor. Here the data model is yours.</p>
+  <table>
+    <thead><tr><th style="width:22%">Layer</th><th>What it holds for a BD pursuit system</th><th style="width:26%">Carried by</th></tr></thead>
+    <tbody>
+      <tr><td class="layer">1 · Data</td><td>Companies, pursuits/opportunities, contacts, interactions — and the deal-participant web (owners, finance partners, consultants) as linked records, so "who was in the deal" is a query, not a memory.</td><td class="mono">Base + linked records</td></tr>
+      <tr><td class="layer">2 · Logic</td><td>Stage gates, required fields by stage, ownership and assignment, reminders, weekly digests. Stage movement becomes the source of truth.</td><td class="mono">Automations · formulas</td></tr>
+      <tr><td class="layer">3 · Interfaces</td><td>Per-persona surfaces: a seller's pipeline (kanban or list), the office dashboard the weekly BD meeting runs from, a leadership roll-up, a finance view — different data points on the same records.</td><td class="mono">Interface Designer</td></tr>
+      <tr><td class="layer">4 · Intake</td><td>The paths that don't require entering the system: forms, buttons, email-driven flows — and AI intake that reads emails, meeting transcripts, and documents, then suggests structured updates.</td><td class="mono">MCP · API · Automations · AI</td></tr>
+      <tr><td class="layer">5 · Governance</td><td>Seat classes per persona, revision history on every record, centralized admin, SSO — already live on Suffolk's account from the April rollout.</td><td class="mono">Admin panel · SSO</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Three recurring patterns</h2>
+
+  <div class="pattern">
+    <span class="num">Pattern 01</span>
+    <h3>The pursuit-pipeline CRM</h3>
+    <p>The shape that fits low-volume, high-value pursuit businesses — professional services, real estate, construction. Not a lead funnel: a structured registry of pursuits moving through decision states, with the weekly meeting run directly from a live dashboard instead of a circulated spreadsheet. Sellers update from a dropdown in their own view; leadership reads the same records through theirs.</p>
+    <p class="build"><strong>Build reality</strong> — The core (data model, stages, first interfaces) is a matter of weeks, not quarters. The discipline is up-front data-model design: getting pursuits, companies, contacts, and participants related correctly the first time. Configuration changes afterward are made by your own ops group, not queued on IT.</p>
+  </div>
+
+  <div class="pattern">
+    <span class="num">Pattern 02</span>
+    <h3>The relationship-intelligence layer</h3>
+    <p>Contacts and interactions as first-class tables, linked to companies and pursuits — so "who at our company has been interacting with whom at this client" is answerable without anyone maintaining it by hand. Interaction logging arrives through connected flows (email and calendar-driven automations) rather than manual entry, which is the only version of this that survives contact with real sellers.</p>
+    <p class="build"><strong>Build reality</strong> — Typically layered onto Pattern 01 once the pursuit registry is trusted. The design question is scope: log everything automatically and filter, or log selectively and enrich. Both are supported; the choice is policy, not product.</p>
+  </div>
+
+  <div class="pattern">
+    <span class="num">Pattern 03</span>
+    <h3>The AI-intake CRM</h3>
+    <p>The end state described on the call. The system reads unstructured sources — emails, meeting transcripts, documents, press coverage — and turns them into structured suggestions: a stage that should move, an interaction that should exist, the ten finance partners behind a development that no seller will ever hand-enter. Suggest-first with a person confirming; automatic application where trust is earned. Admins give the system context in plain language — "when this happens, do this with the information."</p>
+    <p class="build"><strong>Build reality</strong> — Suffolk's Enterprise ChatGPT connects to Airtable through native MCP connectors, so scheduled tasks that scrub email, calendars, and recordings can read and write the CRM directly. This layer lands after the data model is stable — usually pilot-phase-two, not day one.</p>
+  </div>
+
+  <h2>Three builds in production</h2>
+  <p>Each of these is deployed today and maps to one of the archetypes above. Names withheld here; the builds themselves are walked through in masked detail — structure, interfaces, automations — at the solutions session, so complexity gets judged against something concrete.</p>
+
+  <div class="pattern deployed">
+    <span class="num">Build 01 · Large-scale sales CRM &amp; pipeline operations</span>
+    <h3>A global supplier to the brewing industry</h3>
+    <p class="who">13,500+ accounts under management.</p>
+    <p>Field reps capture account and pipeline data through custom interfaces; accounts are mapped by geolocation; transformed data flows into Microsoft Fabric, Synapse, and Tableau for forecasting and account planning. Airtable is the system of engagement at the front — the enterprise data warehouse stays downstream.</p>
+    <p>Replaced: costly legacy forecasting software, Salesforce integration gaps, and record limits that broke prior tooling at database scale. This is the "analytics can live elsewhere" position from our call, running in production — accurate data in the system people touch, heavy analysis wherever it belongs.</p>
+    <p class="integ">Integrations: Salesforce · Microsoft Fabric · Synapse · Tableau · Make · Google Maps API</p>
+  </div>
+
+  <div class="pattern deployed">
+    <span class="num">Build 02 · High-volume contact &amp; pipeline CRM</span>
+    <h3>A national commercial real estate brokerage</h3>
+    <p class="who">44,000 contacts, 40,000 properties.</p>
+    <p>Deal pipelines orchestrated across owners, buyers, and assets: contacts linked to properties and asset types, buyer segmentation, Outlook email and contact syncing, and automated follow-up reminders so touchpoints stop leaking.</p>
+    <p>Replaced: an expensive, rigid legacy CRM, fragmented Excel sheets, and missed follow-ups that were costing deals. The closest analog to the relationship-intelligence layer — who owns what, who's interacting with whom — maintained by automation rather than willpower.</p>
+    <p class="integ">Integrations: Outlook</p>
+  </div>
+
+  <div class="pattern deployed">
+    <span class="num">Build 03 · Deal desk, pricebook &amp; approvals</span>
+    <h3>A semiconductor IP licensing company</h3>
+    <p class="who">Hierarchical pricebook, three levels of SKU complexity.</p>
+    <p>Quoting and approval governance on the same platform as the pipeline: approval routing to the VP of Sales, AI-generated notifications linking to SharePoint specs, and shipped-license tracking.</p>
+    <p>Replaced: manual approval routing, a pricing schema too complex for generic CRM objects, and per-seat friction for people who only approve. Included for breadth — the platform that carries contacts and pursuits also carries deal-desk logic when you get there.</p>
+    <p class="integ">Integrations: SharePoint</p>
+  </div>
+
+  <p>The same three threads run through all of them: one centralized source of truth replacing scattered spreadsheets, automation absorbing the manual work — follow-ups, approvals, alerts — and a data model flexible enough to fit the business instead of the reverse.</p>
+
+  <h2>The build Airtable runs internally</h2>
+  <p>As mentioned on the call: Airtable's own sales organization runs its day-to-day revenue workflows — outreach tracking, note-taking, forecasting, account planning, pipeline-generation planning — on tools its sales ops team built on Airtable. Salesforce remains the back-end system of record, kept in sync two ways, with updates written back through MCP. It is the same architecture as Patterns 01–03, operated at enterprise scale on our own pipeline.</p>
+
+  <h2>Published customer stories</h2>
+  <p>Companies rarely publish their CRM builds — which is why your searching came up thin. Three public write-ups that touch the same themes (centralized source of truth, automation, custom workflows) are shareable as-is:</p>
+  <ul class="stories">
+    <li><a href="https://www.airtable.com/customer-stories/players-tribune" target="_blank" rel="noopener noreferrer">The Players' Tribune</a> <span class="desc">— built a CRM and tracking system to maximize brand partnerships.</span></li>
+    <li><a href="https://www.airtable.com/customer-stories/vimeo" target="_blank" rel="noopener noreferrer">Vimeo</a> <span class="desc">— consolidated tools and created fully custom apps on Airtable.</span></li>
+    <li><a href="https://www.airtable.com/customer-stories/wondery" target="_blank" rel="noopener noreferrer">Wondery</a> <span class="desc">— unearths profitable insights across troves of podcasts.</span></li>
+  </ul>
+
+  <h2>What a pilot looks like against this</h2>
+  <p>Matched to the timeline stated on the call — a small user base and a small data slice, kicking off inside the next couple of months:</p>
+  <p><strong>Weeks 1–2</strong> — data model + stage logic for one office or one pursuit team, seeded with a thin cut of real pursuits. <strong>Weeks 3–4</strong> — the two interfaces that matter first: the seller pipeline view and the weekly-meeting dashboard. <strong>Then</strong> — intake: forms and connected flows first, AI suggestions once the model has settled. Success criteria written down at the start, so the larger migration decision is made against evidence.</p>
+  <p class="footnote">Scale is not the constraint at 200 users — Airtable carries far larger deployments. The pilot exists to prove the use case and the adoption pattern, which is where the last two systems failed.</p>
+
+  <footer>
+    <span>Prepared for Jason Pardes · Suffolk Construction</span>
+    <span>Wyatt Krizman · Airtable · July 2026</span>
+  </footer>
+</div>
+</body>
+</html>
